@@ -18,5 +18,3 @@ def connect():
 
 def getMacAddress() -> str:
     return ':'.join(re.findall('..', '%012x' % getnode()))
-
-connect()
