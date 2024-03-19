@@ -8,10 +8,10 @@ def setupGPIO():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BOARD)
 
-    GPIO.setup(LED_BLUE, GPIO.OUT, GPIO.LOW)
-    GPIO.setup(LED_GREEN, GPIO.OUT, GPIO.LOW)
-    GPIO.setup(LED_RED, GPIO.OUT, GPIO.HIGH)
-    GPIO.setup(LED_YELLOW, GPIO.OUT, GPIO.LOW)
+    GPIO.setup(LED_BLUE, GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setup(LED_GREEN, GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setup(LED_RED, GPIO.OUT, initial=GPIO.HIGH)
+    GPIO.setup(LED_YELLOW, GPIO.OUT, initial=GPIO.LOW)
 
     GPIO.setup(BUTTON_SHUTDOWN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(BUTTON_RECORD, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
