@@ -2,14 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 from audioStream import audio, audioStream, clientSocket, streaming
-
-LED_BLUE = 36
-LED_GREEN = 35
-LED_RED = 40
-LED_YELLOW = 38
-
-BUTTON_RECORD = 33
-BUTTON_SHUTDOWN = 32
+from constants import LED_BLUE, LED_GREEN, LED_RED, LED_YELLOW, BUTTON_RECORD, BUTTON_SHUTDOWN
 
 def setupGPIO():
     GPIO.setwarnings(False)

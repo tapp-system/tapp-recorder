@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 
-from gpio import LED_GREEN, LED_YELLOW, registerGPIOEvents, setupGPIO
+from constants import LED_GREEN, LED_YELLOW
+from gpio import registerGPIOEvents, setupGPIO
 from netSocket import connect
 from audioStream import stream
 

@@ -5,7 +5,7 @@ from struct import pack
 import RPi.GPIO as GPIO
 import time
 
-from src.gpio import LED_BLUE
+from constants import LED_BLUE
 from netSocket import clientSocket
 
 CHANNELS = 2
