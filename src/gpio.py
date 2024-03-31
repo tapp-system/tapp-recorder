@@ -1,53 +1,79 @@
-import RPi.GPIO as GPIO
-import time
+import RPi.GPIO as gpio
 
-from audioStream import audio, audioStream, clientSocket, streaming
-from constants import LED_BLUE, LED_GREEN, LED_RED, LED_YELLOW, BUTTON_RECORD, BUTTON_SHUTDOWN
+from time import sleep
 
-def setupGPIO():
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BOARD)
+from constants import BUTTON_RECORD, BUTTON_RESET_SHUTDOWN, LED_BLUE, LED_GREEN, LED_RED, LED_YELLOW
+from globals import reset, shutdown, streaming
 
-    GPIO.setup(LED_BLUE, GPIO.OUT, initial=GPIO.LOW)
-    GPIO.setup(LED_GREEN, GPIO.OUT, initial=GPIO.LOW)
-    GPIO.setup(LED_RED, GPIO.OUT, initial=GPIO.HIGH)
-    GPIO.setup(LED_YELLOW, GPIO.OUT, initial=GPIO.LOW)
+import audio
+import tapp
 
-    GPIO.setup(BUTTON_SHUTDOWN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.setup(BUTTON_RECORD, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+HIGH = gpio.HIGH
+IN = gpio.IN
+LOW = gpio.LOW
+OUT = gpio.OUT
+PULL_DOWN = gpio.PUD_DOWN
+RISING = gpio.RISING
 
-    time.sleep(2)
-    GPIO.output(LED_RED, GPIO.LOW)
+def gpioSetup():
+    gpio.setwarnings(False)
+    gpio.setmode(gpio.BOARD)
 
-def registerGPIOEvents():
-    GPIO.add_event_detect(BUTTON_SHUTDOWN, GPIO.RISING, callback=shutdownEvent)
-    GPIO.add_event_detect(BUTTON_RECORD, GPIO.RISING, callback=recordEvent)
+    gpio.setup(LED_BLUE, OUT, initial=LOW)
+    gpio.setup(LED_GREEN, OUT, initial=LOW)
+    gpio.setup(LED_RED, OUT, initial=HIGH)
+    gpio.setup(LED_YELLOW, OUT, initial=LOW)
 
-def shutdownEvent(channel):
-    audioStream.stop_stream()
-    audioStream.close()
-    audio.terminate()
-    clientSocket.shutdown(0)
-    clientSocket.close()
+    gpio.setup(BUTTON_RECORD, IN, pull_up_down=PULL_DOWN)
+    gpio.setup(BUTTON_RESET_SHUTDOWN, IN, pull_up_down=PULL_DOWN)
 
-    GPIO.output(LED_RED, GPIO.LOW)
-    GPIO.output(LED_BLUE, GPIO.LOW)
-    GPIO.output(LED_GREEN, GPIO.LOW)
-    GPIO.output(LED_YELLOW, GPIO.LOW)
-    GPIO.cleanup()
+    gpioRegisterEvents()
 
-def recordEvent(channel):
+    sleep(2)
+    gpio.output(LED_RED, LOW)
+    return
+
+def gpioRegisterEvents():
+    gpio.add_event_detect(BUTTON_RECORD, RISING, gpioRecordEvent)
+    gpio.add_event_detect(BUTTON_RESET_SHUTDOWN, RISING, gpioResetShutdownEvent)
+
+    return
+
+def gpioRecordEvent():
     global streaming
-    time.sleep(1)
-    if not input(BUTTON_RECORD): return
-    GPIO.remove_event_detect(BUTTON_RECORD)
-    time.sleep(2)
 
-    if streaming:
-        streaming = False
-        GPIO.output(LED_BLUE, GPIO.LOW)
+    sleep(.5)
+    if not gpio.input(BUTTON_RECORD): return
+    gpio.remove_event_detect(BUTTON_RECORD)
+    sleep(.25)
+
+    streaming = not streaming
+    if streaming: 
+        tapp.startStream()
+        audio.stream.start_stream()
     else:
-        streaming = True
-        GPIO.output(LED_BLUE, GPIO.HIGH)
+        audio.stream.stop_stream()
+        tapp.stopStream()
+    gpio.output(LED_BLUE, streaming)
 
-    GPIO.add_event_detect(BUTTON_RECORD, GPIO.RISING, callback=recordEvent)
+    gpio.add_event_detect(BUTTON_RECORD, RISING, gpioRecordEvent)
+    return
+
+def gpioResetShutdownEvent():
+    global reset
+    global shutdown
+    global streaming
+
+    sleep(.5)
+    if not gpio.input(BUTTON_RESET_SHUTDOWN): return
+    gpio.remove_event_detect(BUTTON_RESET_SHUTDOWN)
+
+    streaming = False
+    sleep(3)
+    if not gpio.input(BUTTON_RESET_SHUTDOWN): reset = True
+    else: shutdown = True
+
+    gpio.output(LED_BLUE, False)
+
+    gpio.add_event_detect(BUTTON_RESET_SHUTDOWN, RISING, gpioResetShutdownEvent)
+    return

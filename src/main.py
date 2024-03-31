@@ -1,24 +1,29 @@
-import RPi.GPIO as GPIO
+import RPi.GPIO as gpio
 
-from constants import LED_GREEN, LED_YELLOW
-from gpio import registerGPIOEvents, setupGPIO
-from netSocket import connect
-from audioStream import stream
+from constants import LED_GREEN
+from globals import reset, shutdown
+from setup import setup
 
-def setup():
-    setupGPIO()
-
-    GPIO.output(LED_YELLOW, GPIO.HIGH)
-    registerGPIOEvents()
-    connect()
-    GPIO.output(LED_YELLOW, GPIO.LOW)
-
-    GPIO.output(LED_GREEN, GPIO.HIGH)
+import reset as r
+import shutdown as s
 
 def main():
+    global reset
+    global shutdown
+
     setup()
+
+    gpio.output(LED_GREEN, gpio.HIGH)
     while True:
-        stream()
+        if reset:
+            r.reset()
+            break
+
+        if shutdown:
+            s.shutdown()
+            break
+
+        pass
 
 if __name__ == '__main__':
     main()
