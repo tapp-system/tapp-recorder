@@ -8,7 +8,7 @@ import RPi.GPIO as gpio
 
 from constants import API_KEY, HOST, LED_RED, SOCKET_PORT
 
-transcriber = socket((AF_INET, SOCK_STREAM))
+transcriber = socket(AF_INET, SOCK_STREAM)
 
 def getMacAddress() -> str:
     return ':'.join(re.findall('..', '%012x' % getnode()))
