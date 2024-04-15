@@ -22,7 +22,7 @@ def connectTranscriber():
             pass
 
     transcriber.connect((HOST, SOCKET_PORT))
-    transcriber.sendall(mac)
+    transcriber.sendall(mac.encode())
 
     status = transcriber.recv(2).decode()
 
