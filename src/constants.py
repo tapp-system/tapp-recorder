@@ -30,4 +30,4 @@ LOW = 0
 
 API_KEY = getenv('TAPP_API_KEY')
 HOST = getenv('TAPP_HOST')
-SOCKET_PORT = getenv('TAPP_SOCKET_PORT')
+SOCKET_PORT = int(getenv('TAPP_SOCKET_PORT'))
