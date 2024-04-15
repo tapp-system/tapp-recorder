@@ -1,33 +1,33 @@
 from time import sleep
 
+import lgpio
 import os
-import RPi.GPIO as gpio
 
-from constants import LED_BLUE, LED_GREEN, LED_RED, LED_YELLOW
+from constants import HIGH, LOW, L_BLUE, L_GREEN, L_RED, L_YELLOW
+from gpio import handle
 
 import audio
 import tapp
 
 def shutdown():
-    gpio.output(LED_BLUE, gpio.LOW)
-    gpio.output(LED_GREEN, gpio.LOW)
-    gpio.output(LED_RED, gpio.LOW)
-    gpio.output(LED_YELLOW, gpio.LOW)
+    lgpio.gpio_write(handle, L_BLUE, LOW)
+    lgpio.gpio_write(handle, L_GREEN, LOW)
+    lgpio.gpio_write(handle, L_RED, LOW)
+    lgpio.gpio_write(handle, L_YELLOW, LOW)
 
-    c = 0
+    counter = 0
     intervalTime = .25
-    while c < 4:
-        gpio.output(LED_YELLOW, gpio.HIGH)
-        sleep(intervalTime / 2)
-        gpio.output(LED_YELLOW, gpio.LOW)
-        sleep(intervalTime / 2)
-
-        c += 1
+    while counter < 4:
+        lgpio.gpio_write(handle, L_YELLOW, HIGH)
+        sleep(intervalTime)
+        lgpio.gpio_write(handle, L_YELLOW, LOW)
+        sleep(intervalTime)
+        counter += 1
 
     audio.close()
     tapp.setInactive()
     tapp.transcriber.shutdown(0)
     tapp.transcriber.close()
-    gpio.cleanup()
-    os.system('shutdown now')
+
+    os.remove('shutdown now')
     return

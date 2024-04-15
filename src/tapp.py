@@ -2,11 +2,11 @@ from socket import AF_INET, socket, SOCK_STREAM
 from time import sleep
 from uuid import getnode
 
+import lgpio as gpio
 import re
 import requests
-import RPi.GPIO as gpio
 
-from constants import API_KEY, HOST, LED_RED, SOCKET_PORT
+from constants import API_KEY, HOST, SOCKET_PORT
 
 transcriber = socket(AF_INET, SOCK_STREAM)
 
@@ -15,19 +15,25 @@ def getMacAddress() -> str:
 
 def connectTranscriber():
     mac = getMacAddress()
+
     if mac != getMacAddress():
         while True:
-            gpio.output(LED_RED, gpio.HIGH)
-            sleep(.5)
-            gpio.output(LED_RED, gpio.LOW)
-            sleep(.5)
+            # TODO Red led blinking
+            pass
 
     transcriber.connect((HOST, SOCKET_PORT))
     transcriber.sendall(mac)
 
+    status = transcriber.recv(2)
+
+    if status != 'OK':
+        while True:
+            # TODO Red led blinking
+            pass
+
     return
 
-def setActive():
+def activate():
     try:
         response = requests.get('https://' + HOST + '/api/v1/transcriber/activate', headers={
             'x-macaddress': getMacAddress(),
@@ -39,41 +45,35 @@ def setActive():
     except requests.exceptions.HTTPError as err:
         raise SystemExit(err)
 
-    return
-
-def setInactive():
+def deactivate():
     try:
         response = requests.get('https://' + HOST + '/api/v1/transcriber/deactivate', headers={
             'x-macaddress': getMacAddress(),
-            'x-api': API_KEY
+            'x-apikey': API_KEY
         })
 
         if response.status_code == 200:
             return
     except requests.exceptions.HTTPError as err:
         raise SystemExit(err)
-
-    return
 
 def startStream():
     try:
         response = requests.get('https://' + HOST + '/api/v1/transcriber/startStream', headers={
             'x-macaddress': getMacAddress(),
-            'x-api': API_KEY
+            'x-apikey': API_KEY
         })
 
         if response.status_code == 200:
             return
     except requests.exceptions.HTTPError as err:
         raise SystemExit(err)
-
-    return
 
 def stopStream():
     try:
         response = requests.get('https://' + HOST + '/api/v1/transcriber/stopStream', headers={
             'x-macaddress': getMacAddress(),
-            'x-api': API_KEY
+            'x-apikey': API_KEY
         })
 
         if response.status_code == 200:
@@ -81,10 +81,8 @@ def stopStream():
     except requests.exceptions.HTTPError as err:
         raise SystemExit(err)
 
-    return
-
-def tappSetup():
+def setup():
     connectTranscriber()
-    setActive()
+    activate()
 
     return

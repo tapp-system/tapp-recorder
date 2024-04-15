@@ -7,7 +7,10 @@ from globals import streaming
 
 import tapp
 
-def audioStreamCallback(inData: bytes | None, frameCount: int, timeInfo, statusFlags: tuple[bytes | None, int]):
+audio = PyAudio()
+stream: PyAudio.Stream
+
+def streamCallback(inData: bytes | None, framceCount: int, timeInfo,statusFlags: tuple[bytes | None, int]):
     global streaming
 
     if not streaming: return (None, paAbort)
@@ -18,16 +21,24 @@ def audioStreamCallback(inData: bytes | None, frameCount: int, timeInfo, statusF
 
     return (inData, paContinue)
 
-audio = PyAudio()
-stream: PyAudio.Stream
-
-def open():
+def setup():
     global stream
 
-    stream = audio.open(RATE, CHANNELS, FORMAT, True, frames_per_buffer=CHUNK, stream_callback=audioStreamCallback)
+    stream = audio.open(
+        channels=CHANNELS,
+        format=FORMAT,
+        frames_per_buffer=CHUNK,
+        input=True,
+        rate=RATE,
+        stream_callback=streamCallback
+    )
+
+    return
 
 def close():
     stream.stop_stream()
     stream.close()
     audio.close()
     audio.terminate()
+
+    return

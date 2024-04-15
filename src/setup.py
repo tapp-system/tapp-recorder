@@ -1,16 +1,17 @@
-import RPi.GPIO as gpio
+import lgpio
 
-from constants import LED_YELLOW
-from gpio import gpioSetup
-from tapp import tappSetup
+from constants import HIGH, LOW, L_YELLOW
 
 import audio
+import gpio
+import tapp
 
 def setup():
-    gpioSetup()
+    gpio.setup()
 
-    gpio.output(LED_YELLOW, gpio.HIGH)
-    tappSetup()
-    audio.open()
-    gpio.output(LED_YELLOW, gpio.LOW)
+    lgpio.gpio_write(gpio.handle, L_YELLOW, HIGH)
+    tapp.setup()
+    audio.setup()
+    lgpio.gpio_write(gpio.handle, L_YELLOW, LOW)
+
     return
