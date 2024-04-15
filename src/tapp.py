@@ -24,7 +24,7 @@ def connectTranscriber():
     transcriber.connect((HOST, SOCKET_PORT))
     transcriber.sendall(mac)
 
-    status = transcriber.recv(2)
+    status = transcriber.recv(2).decode()
 
     if status != 'OK':
         while True:
