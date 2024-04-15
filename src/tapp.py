@@ -35,7 +35,7 @@ def connectTranscriber():
 
 def activate():
     try:
-        response = requests.get('https://' + HOST + '/api/v1/transcriber/activate', headers={
+        response = requests.get('http://' + HOST + '/api/v1/transcriber/activate', headers={
             'x-macaddress': getMacAddress(),
             'x-apikey': API_KEY
         })
@@ -47,7 +47,7 @@ def activate():
 
 def deactivate():
     try:
-        response = requests.get('https://' + HOST + '/api/v1/transcriber/deactivate', headers={
+        response = requests.get('http://' + HOST + '/api/v1/transcriber/deactivate', headers={
             'x-macaddress': getMacAddress(),
             'x-apikey': API_KEY
         })
@@ -59,7 +59,7 @@ def deactivate():
 
 def startStream():
     try:
-        response = requests.get('https://' + HOST + '/api/v1/transcriber/startStream', headers={
+        response = requests.get('http://' + HOST + '/api/v1/transcriber/startStream', headers={
             'x-macaddress': getMacAddress(),
             'x-apikey': API_KEY
         })
@@ -71,7 +71,7 @@ def startStream():
 
 def stopStream():
     try:
-        response = requests.get('https://' + HOST + '/api/v1/transcriber/stopStream', headers={
+        response = requests.get('http://' + HOST + '/api/v1/transcriber/stopStream', headers={
             'x-macaddress': getMacAddress(),
             'x-apikey': API_KEY
         })
