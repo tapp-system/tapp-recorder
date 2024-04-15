@@ -13,7 +13,7 @@ handle = gpio.gpiochip_open(0)
 
 def inputEvent(pin: int, cb = None):
     if not cb:
-        print('Callback for input-event at pin: ' + pin + ' has no callback function')
+        print('Callback for input-event at pin: ' + str(pin) + ' has no callback function')
         return
 
     def target():
@@ -21,7 +21,7 @@ def inputEvent(pin: int, cb = None):
             if gpio.gpio_read(handle, pin) == 1: cb()
 
     Thread(target=target).start()
-    print('Registered input-event for pin ' + pin)
+    print('Registered input-event for pin ' + str(pin))
 
     return
 
