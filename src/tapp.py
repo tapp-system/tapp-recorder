@@ -1,37 +1,12 @@
 from socket import AF_INET, socket, SOCK_STREAM
-from time import sleep
 from uuid import getnode
 
-import lgpio as gpio
 import re
 import requests
 
 from constants import API_KEY, HOST, SOCKET_PORT
 
 transcriber = socket(AF_INET, SOCK_STREAM)
-
-def getMacAddress() -> str:
-    return ':'.join(re.findall('..', '%012x' % getnode()))
-
-def connectTranscriber():
-    mac = getMacAddress()
-
-    if mac != getMacAddress():
-        while True:
-            # TODO Red led blinking
-            pass
-
-    transcriber.connect((HOST, SOCKET_PORT))
-    transcriber.sendall(mac.encode())
-
-    status = transcriber.recv(2).decode()
-
-    if status != 'OK':
-        while True:
-            # TODO Red led blinking
-            pass
-
-    return
 
 def activate():
     try:
@@ -45,6 +20,29 @@ def activate():
     except requests.exceptions.HTTPError as err:
         raise SystemExit(err)
 
+def close():
+    return
+
+def connect():
+    mac = getMacAddress()
+
+    if mac != getMacAddress():
+        while True:
+            # TODO
+            pass
+
+    transcriber.connect((HOST, SOCKET_PORT))
+    transcriber.sendall(mac.encode())
+
+    status = transcriber.recv(2).decode()
+
+    if status != 'OK':
+        while True:
+            # TODO
+            pass
+
+    return
+
 def deactivate():
     try:
         response = requests.get('http://' + HOST + '/api/v1/transcriber/deactivate', headers={
@@ -56,6 +54,15 @@ def deactivate():
             return
     except requests.exceptions.HTTPError as err:
         raise SystemExit(err)
+
+def getMacAddress():
+    return ':'.join(re.findall('..', '%012x' % getnode()))
+
+def setup():
+    connect()
+    activate()
+
+    return
 
 def startStream():
     try:
@@ -80,9 +87,3 @@ def stopStream():
             return
     except requests.exceptions.HTTPError as err:
         raise SystemExit(err)
-
-def setup():
-    connectTranscriber()
-    activate()
-
-    return

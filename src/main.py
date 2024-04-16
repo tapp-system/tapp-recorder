@@ -1,29 +1,21 @@
-import lgpio as gpio
-
-from constants import HIGH, L_GREEN
-from globals import reset, shutdown
-from gpio import handle
+from reset import reset
 from setup import setup
+from shutdown import shutdown
 
-import shutdown as s
+import globals as g
 
 def main():
-    setup()
-
-    gpio.gpio_write(handle, L_GREEN, HIGH)
     while True:
-        if reset:
-            # TODO reset functionality
-            while True:
-                pass
-        elif shutdown:
-            s.shutdown()
+        if g.reset:
+            reset()
+            break
+        elif g.shutdown:
+            shutdown()
             break
         else: pass
 
     return
 
-
-# Start sequence:
 if __name__ == '__main__':
+    setup()
     main()

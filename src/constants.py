@@ -1,3 +1,4 @@
+from lgpio import SET_PULL_DOWN
 from os import getenv
 from pyaudio import paInt24
 
@@ -10,9 +11,6 @@ RATE = 192000
 
 
 # GPIO
-# Numbers are the GPIO numbers, not the actual PIN numbers
-# Constants prefixed with B_ are buttons
-# Constants prefixed with L_ are leds
 
 B_RECORD = 13
 B_RES_SHUT = 12
@@ -24,6 +22,7 @@ L_YELLOW = 20
 
 HIGH = 1
 LOW = 0
+PULL_DOWN = SET_PULL_DOWN
 
 
 # TAPP
