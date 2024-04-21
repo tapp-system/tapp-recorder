@@ -12,7 +12,6 @@ stream: PyAudio.Stream
 
 def close():
     stream.stop_stream()
-    stream.close()
     audio.close(stream)
     audio.terminate()
     print("Closed Audio")

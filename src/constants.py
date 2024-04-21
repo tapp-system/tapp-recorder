@@ -7,7 +7,7 @@ from pyaudio import paInt24
 CHANNELS = 2
 CHUNK = 1024
 FORMAT = paInt24
-RATE = 192000
+RATE = 48000
 
 
 # GPIO
