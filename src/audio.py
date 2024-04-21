@@ -13,8 +13,9 @@ stream: PyAudio.Stream
 def close():
     stream.stop_stream()
     stream.close()
-    audio.close()
+    audio.close(stream)
     audio.terminate()
+    print("Closed Audio")
     return
 
 def streamCallback(inData: bytes | None, frameCount: int, timeInfo, statusFlags: tuple[bytes | None]):
@@ -38,4 +39,5 @@ def setup():
     )
 
     stream.stop_stream()
+    print("Audio is ready!")
     return

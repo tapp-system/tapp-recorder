@@ -5,6 +5,7 @@ from shutdown import shutdown
 import globals as g
 
 def main():
+    print("Starting main-loop...")
     while True:
         if g.reset:
             reset()

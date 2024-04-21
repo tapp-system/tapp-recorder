@@ -12,6 +12,8 @@ import tapp
 handle = gpio.gpiochip_open(0)
 
 def blink(pin: int, interval: float, iterations: int = 0):
+    print("Blink triggered")
+
     def blinkInterval(pin: int, interval: float):
         gpio.gpio_write(handle, pin, HIGH)
         sleep(interval)
@@ -38,6 +40,7 @@ def close():
     gpio.gpio_free(handle, L_RED)
     gpio.gpio_free(handle, L_YELLOW)
     gpio.gpiochip_close(handle)
+    print("Closed gpio")
     return
 
 def deactivate():
@@ -45,6 +48,7 @@ def deactivate():
     gpio.gpio_write(handle, L_GREEN, LOW)
     gpio.gpio_write(handle, L_RED, LOW)
     gpio.gpio_write(handle, L_YELLOW, LOW)
+    print("Deactivated gpio leds")
     return
 
 def inputEvent(pin: int, cb = None):
@@ -61,7 +65,7 @@ def inputEvent(pin: int, cb = None):
         return
 
     Thread(target=target, args=(pin, cb)).start()
-    print('Registered input event at pin: ' + str(pin) + ' has no callback function!')
+    print('Registered input event at pin: ' + str(pin))
     return
 
 def recordEvent():
@@ -83,6 +87,7 @@ def registerInputs():
     inputEvent(B_RECORD, recordEvent)
     inputEvent(B_RES_SHUT, resShutEvent)
 
+    print("Registered inputs")
     return
 
 def registerOutputs():
@@ -91,6 +96,7 @@ def registerOutputs():
     gpio.gpio_claim_output(handle, L_GREEN, LOW)
     gpio.gpio_claim_output(handle, L_YELLOW, LOW)
 
+    print("Registered outputs")
     return
 
 def resShutEvent():
@@ -101,6 +107,22 @@ def resShutEvent():
     if gpio.gpio_read(handle, B_RES_SHUT) == 1: g.shutdown = True
     else: g.reset = True
 
+    print("Triggered resShutEvent")
+    return
+
+def yellow(b: bool):
+    if b: gpio.gpio_write(handle, L_YELLOW, HIGH)
+    else: gpio.gpio_write(handle, L_YELLOW, LOW)
+    return
+
+def green(b: bool):
+    if b: gpio.gpio_write(handle, L_GREEN, HIGH)
+    else: gpio.gpio_write(handle, L_GREEN, LOW)
+    return
+
+def blue(b: bool):
+    if b: gpio.gpio_write(handle, L_BLUE, HIGH)
+    else: gpio.gpio_write(handle, L_BLUE, LOW)
     return
 
 def setup():
@@ -108,4 +130,5 @@ def setup():
     registerInputs()
 
     gpio.gpio_write(handle, L_RED, LOW)
+    print("Gpio is ready!")
     return

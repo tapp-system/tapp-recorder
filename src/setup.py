@@ -3,7 +3,11 @@ import gpio
 import tapp
 
 def setup():
-    audio.setup()
+    print("Setup Triggered")
     gpio.setup()
+    gpio.yellow(True)
+    audio.setup()
     tapp.setup()
+    gpio.yellow(False)
+    print("Setup complete")
     return

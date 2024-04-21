@@ -16,11 +16,16 @@ def activate():
         })
 
         if response.status_code == 200:
+            print("Activated")
             return
     except requests.exceptions.HTTPError as err:
+        print("Not activated")
         raise SystemExit(err)
 
 def close():
+    transcriber.sendall("DISC")
+    transcriber.close()
+    print("Tapp closed")
     return
 
 def connect():
@@ -37,10 +42,11 @@ def connect():
     status = transcriber.recv(2).decode()
 
     if status != 'OK':
+        print("Tapp something went wrong 0900")
         while True:
-            # TODO
             pass
 
+    print("Tapp connected")
     return
 
 def deactivate():
@@ -51,8 +57,10 @@ def deactivate():
         })
 
         if response.status_code == 200:
+            print("Deactivated")
             return
     except requests.exceptions.HTTPError as err:
+        print("Not deactivated")
         raise SystemExit(err)
 
 def getMacAddress():
@@ -62,6 +70,7 @@ def setup():
     connect()
     activate()
 
+    print("Tapp setup finished")
     return
 
 def startStream():
@@ -72,8 +81,10 @@ def startStream():
         })
 
         if response.status_code == 200:
+            print("Streaming")
             return
     except requests.exceptions.HTTPError as err:
+        print("Not streaming")
         raise SystemExit(err)
 
 def stopStream():
@@ -84,6 +95,8 @@ def stopStream():
         })
 
         if response.status_code == 200:
+            print("Stop streaming")
             return
     except requests.exceptions.HTTPError as err:
+        print("Not stop streaming")
         raise SystemExit(err)
