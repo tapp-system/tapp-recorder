@@ -54,6 +54,7 @@ def deactivate():
 def inputEvent(pin: int, cb = None):
     def target(pin: int, cb):
         while True:
+            if g.reset or g.shutdown: return
             if gpio.gpio_read(handle, pin) == 0: pass
             sleep(.5)
             if gpio.gpio_read(handle, pin) == 1:
