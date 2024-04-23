@@ -23,7 +23,7 @@ def activate():
         raise SystemExit(err)
 
 def close():
-    transcriber.sendall("DISC")
+    transcriber.sendall("DISC".encode())
     transcriber.close()
     print("Tapp closed")
     return

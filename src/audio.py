@@ -21,7 +21,7 @@ def streamCallback(inData: bytes | None, frameCount: int, timeInfo, statusFlags:
     if not g.streaming: return (None, paComplete)
 
     data = dumps(inData)
-    packedData = pack('Q', len(data)) + data
+    packedData = pack('Q', len(data))+data
     tapp.transcriber.sendall(packedData)
 
     return (inData, paContinue)
@@ -33,10 +33,11 @@ def setup():
         channels=CHANNELS,
         format=FORMAT,
         frames_per_buffer=CHUNK,
-        input=True, rate=RATE,
+        input=True,
+        rate=RATE,
+        start=False,
         stream_callback=streamCallback
     )
 
-    stream.stop_stream()
     print("Audio is ready!")
     return
